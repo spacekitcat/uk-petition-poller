@@ -1,0 +1,37 @@
+{
+  "name": "uk-petition-signature-change-rate",
+  "version": "0.0.1",
+  "description": "Tool to track the growth rate of signatures on petition.parliament.uk",
+  "main": "lib/index.js",
+  "repository": "https://github.com/spacekitcat/uk-petition-signature-change-rate",
+  "author": "Lisa Burton",
+  "license": "MIT",
+  "files": [
+    "index.js",
+    "lib",
+    "src"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.0.0",
+    "jest": "^24.0.0"
+  },
+  "scripts": {
+    "babel": "babel src/ --out-dir lib/ --source-maps",
+    "test": "jest .spec.js --coverage",
+    "prebuild": "npm run babel",
+    "build": "npm run test",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "request-promise": "^4.2.4"
+  },
+  "keywords": [
+    "petition",
+    "politics",
+    "uk",
+    "brexit"
+  ]
+}
