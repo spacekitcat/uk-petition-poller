@@ -10,14 +10,17 @@ class PetitionTracker {
   }
 
   pollerFunction() {
-    request(`https://petition.parliament.uk/petitions/241584/count.json`).then(
-      () => {
-        this.callOn('change', 0);
-      }
-    );
+    request(
+      `https://petition.parliament.uk/petitions/${this.petitionCode}/count.json`
+    ).then(jsonString => {
+      console.log(jsonString);
+      this.callOn('change', 0);
+    });
   }
 
-  start() {
+  start(petitionCode) {
+    this.petitionCode = petitionCode;
+    this.pollerFunction();
     setTimeout(this.pollerFunction.bind(this), 300000);
   }
 
