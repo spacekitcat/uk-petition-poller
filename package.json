@@ -1,6 +1,6 @@
 {
   "name": "uk-petition-poller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tool to monitor the number of signatures on a UK Government petition",
   "main": "lib/index.js",
   "repository": "https://github.com/spacekitcat/uk-petition-signature-change-rate",
