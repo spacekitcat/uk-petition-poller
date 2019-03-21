@@ -1,6 +1,7 @@
 # UK Petition poller
 
-Polls a given petition on `https://petition.parliament.uk` for the current signature count. Made during what you might describe as a one person hackathon on a Thursday.
+Polls a given petition on `https://petition.parliament.uk` for the current signature count. It reads the signature count every 60 seconds.
+Made during what you might describe as a one person hackathon on a Thursday.
 
 ## Building
 
