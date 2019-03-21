@@ -12,7 +12,7 @@ Made during what you might describe as a one person hackathon on a Thursday.
 
 ## Unit tests
 
-The unit tests use Jest and the Yarn command below runs them.
+The unit tests use Jest via the Yarn `test` command like so:
 
 ```bash
 /uk-petition-poller ‹master*› % yarn test
@@ -20,7 +20,7 @@ The unit tests use Jest and the Yarn command below runs them.
 
 ## The example script
 
-The example can be ran by taking the following steps:
+Run the example like so:
 
 ```bash
 git clone https://github.com/spacekitcat/uk-petition-poller
@@ -39,7 +39,8 @@ First, add the dependency to your project like so:
 /your-rad-project ‹master*› % yarn add uk-petition-poller
 ```
 
-And then you just use the library like the example below (use import syntax if you have Babel configured for it):
+And then you just use the library like the example below (use import syntax if you have Babel configured for it).
+I was experimenting with a little bit of ascii animation, so it's a little messy and complex, but I think it's clear enough to illustrate how to use this library.
 
 ```javascript
 const PetitionTracker = require('uk-petition-poller');
