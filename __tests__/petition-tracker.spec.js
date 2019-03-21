@@ -5,14 +5,14 @@ jest.mock('request-promise');
 
 jest.useFakeTimers();
 
-const generateJson = count => ({ signature_count: count });
+const generateJson = count => JSON.stringify({ signature_count: count });
 
-const setupHttpMock = () => {
-  request.mockResolvedValue(generateJson(1000000));
+const setupHttpMock = signatureCount => {
+  request.mockResolvedValue(generateJson(signatureCount));
 };
 
-const instantiateSut = () => {
-  setupHttpMock();
+const instantiateSut = signatureCount => {
+  setupHttpMock(signatureCount);
 
   const petitionTracker = new PetitionTracker();
 
@@ -27,35 +27,67 @@ const setupOnChangeMock = petitionTracker => {
 
 describe('The `PetitionTracker` class', () => {
   describe('the `start` method', () => {
-    describe('valid props are provided', () => {
+    describe('when valid props are provided', () => {
       it('starts tracking', async () => {
+        setInterval.mockClear();
+        const expectedSignatureCount = 12345333;
         const expectedPetitionCode = '241584';
 
-        const petitionTracker = instantiateSut(expectedPetitionCode);
+        const petitionTracker = instantiateSut(expectedSignatureCount);
         const changeHandlerMock = setupOnChangeMock(petitionTracker);
 
         await petitionTracker.start(expectedPetitionCode);
         expect(changeHandlerMock).toHaveBeenCalledTimes(1);
+        expect(changeHandlerMock).toHaveBeenCalledWith({
+          signature_count: expectedSignatureCount,
+          last_call_ok: true,
+          last_successful_update: expect.any(Number)
+        });
         expect(request).toHaveBeenCalledWith(
           `https://petition.parliament.uk/petitions/${expectedPetitionCode}/count.json`
         );
-        setTimeout.mockClear();
       });
     });
 
-    describe('valid props are provided (alt)', async () => {
+    describe('when valid props are provided (alt)', async () => {
       it('starts tracking', async () => {
+        setInterval.mockClear();
+        const expectedSignatureCount = 33345637;
         const expectedPetitionCode = '182329';
 
-        const petitionTracker = instantiateSut(expectedPetitionCode);
+        const petitionTracker = instantiateSut(expectedSignatureCount);
         const changeHandlerMock = setupOnChangeMock(petitionTracker);
 
         await petitionTracker.start(expectedPetitionCode);
         expect(changeHandlerMock).toHaveBeenCalledTimes(1);
+        expect(changeHandlerMock).toHaveBeenCalledWith({
+          signature_count: expectedSignatureCount,
+          last_call_ok: true,
+          last_successful_update: expect.any(Number)
+        });
         expect(request).toHaveBeenCalledWith(
           `https://petition.parliament.uk/petitions/${expectedPetitionCode}/count.json`
         );
-        setTimeout.mockClear();
+      });
+    });
+
+    describe('when the http call fails', async () => {
+      it('should do ', async () => {
+        request.mockRejectedValue(new Error('502'));
+        const petitionTracker = new PetitionTracker();
+
+        const changeHandlerMock = jest.fn();
+        petitionTracker.on('change', changeHandlerMock);
+
+        await petitionTracker.start();
+        expect(changeHandlerMock).toHaveBeenCalledTimes(1);
+        expect(changeHandlerMock).toHaveBeenCalledWith({
+          signature_count: 0,
+          last_call_ok: false,
+          last_successful_update: null
+        });
+
+        setInterval.mockClear();
       });
     });
   });
@@ -63,47 +95,45 @@ describe('The `PetitionTracker` class', () => {
   describe('the `start` method timeout code', () => {
     describe('valid props are provided', () => {
       it('starts tracking', async () => {
+        setInterval.mockClear();
         const expectedPetitionCode = '199911';
 
         const petitionTracker = instantiateSut(expectedPetitionCode);
         const changeHandlerMock = setupOnChangeMock(petitionTracker);
 
         await petitionTracker.start(expectedPetitionCode);
-        await jest.runAllTimers();
+        await jest.runOnlyPendingTimers();
         expect(changeHandlerMock).toHaveBeenCalledTimes(2);
-        expect(setTimeout).toHaveBeenCalledTimes(1);
-        expect(setTimeout).toHaveBeenLastCalledWith(
+        expect(setInterval).toHaveBeenCalledTimes(1);
+        expect(setInterval).toHaveBeenLastCalledWith(
           expect.any(Function),
-          300000
+          60000
         );
         expect(request).toHaveBeenCalledWith(
           `https://petition.parliament.uk/petitions/${expectedPetitionCode}/count.json`
         );
-
-        setTimeout.mockClear();
       });
     });
 
     describe('valid props are provided (alt)', async () => {
       it('starts tracking', async () => {
+        setInterval.mockClear();
         const expectedPetitionCode = '434343';
 
         const petitionTracker = instantiateSut(expectedPetitionCode);
         const changeHandlerMock = setupOnChangeMock(petitionTracker);
 
         await petitionTracker.start(expectedPetitionCode);
-        await jest.runAllTimers();
+        await jest.runOnlyPendingTimers();
         expect(changeHandlerMock).toHaveBeenCalledTimes(2);
-        expect(setTimeout).toHaveBeenCalledTimes(1);
-        expect(setTimeout).toHaveBeenLastCalledWith(
+        expect(setInterval).toHaveBeenCalledTimes(1);
+        expect(setInterval).toHaveBeenLastCalledWith(
           expect.any(Function),
-          300000
+          60000
         );
         expect(request).toHaveBeenCalledWith(
           `https://petition.parliament.uk/petitions/${expectedPetitionCode}/count.json`
         );
-
-        setTimeout.mockClear();
       });
     });
   });
