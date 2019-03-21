@@ -12,4 +12,4 @@ VERSION=$(npm version patch)
 git add package.json
 git commit -m "Publising $VERSION";
 git push --tags
-npm publish
+yarn publish
