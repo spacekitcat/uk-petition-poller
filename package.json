@@ -1,7 +1,7 @@
 {
-  "name": "uk-petition-signature-change-rate",
+  "name": "uk-petition-poller",
   "version": "0.0.1",
-  "description": "Tool to track the growth rate of signatures on petition.parliament.uk",
+  "description": "Tool to monitor the number of signatures on a UK Government petition",
   "main": "lib/index.js",
   "repository": "https://github.com/spacekitcat/uk-petition-signature-change-rate",
   "author": "Lisa Burton",
