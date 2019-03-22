@@ -26,6 +26,7 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
+    "cli-spinner": "^0.2.10",
     "request-promise": "^4.2.4"
   },
   "keywords": [

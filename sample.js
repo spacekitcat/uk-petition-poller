@@ -1,56 +1,49 @@
 const PetitionTracker = require('./lib/index');
-const process = require('process');
+var Spinner = require('cli-spinner').Spinner;
+
+var spinner = new Spinner('%s');
+spinner.setSpinnerString('★☆');
+spinner.setSpinnerDelay(500);
+spinner.setSpinnerTitle('\x1b[31m  AWAITING DATA \x1b[0m');
+spinner.start();
 
 const petitionTracker = new PetitionTracker();
-const terminalWidth = 120;
 
-const generateStatusString = (signatureCount, lastUpdateSuccess) => {
-  let output = Buffer.alloc(terminalWidth, ' ');
+const generateStatusString = (
+  signatureCount,
+  lastUpdateSuccess,
+  lastUpdate
+) => {
   let separator = Buffer.from(' :: ');
 
-  let updatedStatus = Buffer.concat(
-    [
-      Buffer.from(`SIGNATURES \x1b[31m${signatureCount}\x1b[0m`),
-      separator,
-      Buffer.from(`UPDATE SUCCESS \x1b[31m${lastUpdateSuccess}\x1b[0m`),
-      separator,
-      output
-    ],
-    terminalWidth - 1
-  );
+  let lastUpdateDate = new Date(lastUpdate);
+  let updatedStatus = Buffer.concat([
+    Buffer.from('  '),
+    Buffer.from(`SIGNATURES \x1b[31m${signatureCount}\x1b[0m`),
+    separator,
+    Buffer.from(`UPDATE SUCCESS \x1b[31m${lastUpdateSuccess}\x1b[0m`),
+    separator,
+    Buffer.from(
+      `LAST UPDATE \x1b[31m${lastUpdateDate.getHours()}:${lastUpdateDate.getMinutes()}\x1b[0m`
+    )
+  ]);
 
-  return Buffer.concat([updatedStatus, Buffer.from('\r')], terminalWidth);
+  return updatedStatus;
 };
 
-let statusString = '';
-let lastUpdate;
 petitionTracker.on('change', data => {
+  spinner.stop(true);
   const signatureCount = data['signature_count'];
-  lastUpdate = data['last_successful_update'];
+  const lastUpdate = data['last_successful_update'];
   const lastUpdateOkay = data['last_call_ok'];
 
-  statusString = generateStatusString(signatureCount, lastUpdateOkay);
+  statusString = generateStatusString(
+    signatureCount,
+    lastUpdateOkay,
+    lastUpdate
+  );
+  spinner.setSpinnerTitle(statusString.toString('UTF-8'));
+  spinner.start();
 });
-
-const frames = ['◐', '◒', '◐', '◓'];
-let index = 0;
-setInterval(() => {
-  let loadingStatus = Buffer.concat(
-    [
-      Buffer.from(`  ${frames[index]}  `),
-      Buffer.from(
-        `NEXT UPDATE \x1b[31m${Math.round(
-          (60000 - (new Date() - lastUpdate)) / 1000
-        )}s\x1b[0m :: `
-      ),
-      statusString
-    ],
-    terminalWidth - 1
-  );
-  process.stdout.write(
-    Buffer.concat([loadingStatus, Buffer.from('\r')], terminalWidth)
-  );
-  index = index >= frames.length - 1 ? 0 : index + 1;
-}, 1000);
 
 petitionTracker.start('241584');
