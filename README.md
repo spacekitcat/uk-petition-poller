@@ -28,7 +28,8 @@ cd uk-petition-poller
 /uk-petition-poller <master> % yarn install
 /uk-petition-poller <master> % yarn build
 /uk-petition-poller <master> % node sample.js
-☆   SIGNATURES 3047041 :: UPDATE SUCCESS true :: LAST UPDATE 12:39^C
+☆   SIGNATURES 3047041 :: UPDATE SUCCESS true :: LAST UPDATE 12:44
+★   SIGNATURES 3047041 :: UPDATE SUCCESS true :: LAST UPDATE 12:45
 ```
 
 ## Adding to your project

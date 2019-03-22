@@ -1,6 +1,7 @@
 const PetitionTracker = require('./lib/index');
 var Spinner = require('cli-spinner').Spinner;
 
+let initialized = false;
 var spinner = new Spinner('%s');
 spinner.setSpinnerString('★☆');
 spinner.setSpinnerDelay(500);
@@ -32,7 +33,8 @@ const generateStatusString = (
 };
 
 petitionTracker.on('change', data => {
-  spinner.stop(true);
+  spinner.stop(!initialized);
+  console.log();
   const signatureCount = data['signature_count'];
   const lastUpdate = data['last_successful_update'];
   const lastUpdateOkay = data['last_call_ok'];
@@ -42,6 +44,7 @@ petitionTracker.on('change', data => {
     lastUpdateOkay,
     lastUpdate
   );
+  initialized = true;
   spinner.setSpinnerTitle(statusString.toString('UTF-8'));
   spinner.start();
 });
