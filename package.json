@@ -8,6 +8,7 @@
   "license": "MIT",
   "files": [
     "index.js",
+    "sample.js",
     "lib",
     "src"
   ],
