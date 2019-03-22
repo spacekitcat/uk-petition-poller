@@ -44,7 +44,7 @@ And then you just use the library like the example below (use import syntax if y
 I was experimenting with a little bit of ascii animation, so it's a little messy and complex, but I think it's clear enough to illustrate how to use this library.
 
 ```javascript
-const PetitionTracker = require('./lib/index');
+const PetitionTracker = require('uk-petition-poller');
 var Spinner = require('cli-spinner').Spinner;
 
 var spinner = new Spinner('%s');
